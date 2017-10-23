@@ -1,7 +1,36 @@
 doctype html
-html
+html(lang='en')
   head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='Assignment 2 for CAB432')
+    meta(name='authors', content='Daniel Gilchrist & Mustafa Hussaini')
     title= title
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/heroic-features.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+
   body
+    // Navigation
+    nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top
+      .container
+        a.navbar-brand(href='/') CAB432 Assignment 2
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarResponsive', aria-controls='navbarResponsive', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarResponsive.collapse.navbar-collapse
+          ul.navbar-nav.ml-auto
+            li.nav-item.active
+              a.nav-link(href='/')
+                | Home
+                span.sr-only (current)
     block content
+    
+    // Bootstrap core JavaScript
+    script(src='javascripts/jquery.min.js')
+    script(src='javascripts/popper.min.js')
+    script(src='javascripts/bootstrap.min.js')
+    
+    // Footer
+    footer.footer.bg-dark
+        .container
+            span.text-muted Place sticky footer content here.
