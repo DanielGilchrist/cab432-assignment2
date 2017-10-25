@@ -6,7 +6,7 @@ apt-get install -y nodejs
 
 # install gcc
 apt-get install -y python-software-properties
-add-apt-repository ppa:ubuntu-toolchain-r/test
+add-apt-repository ppa:ubuntu-toolchain-r/test -y
 apt-get update
 apt-get install -y gcc-4.8
 update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
