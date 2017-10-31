@@ -27,3 +27,25 @@ body > .container {
     padding-right: 15px;
     padding-left: 15px;
 }
+
+.card-body img {
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.light{
+  color: silver;
+}
+
+.summary{
+  margin-top: 5px;
+}
+
+.row {
+    margin-bottom: 20px;
+}
+
+.clear {
+    clear: both;
+}

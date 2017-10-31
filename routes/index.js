@@ -1,44 +1,54 @@
-let express = require('express');
-let zerorpc = require('zerorpc');
-let twitter = require('./twitter');
-let router = express.Router();
+module.exports = function(io) {
+  let express = require('express');
+  let zerorpc = require('zerorpc');
+  let twitter = require('./twitter');
+  let router = express.Router();
+  
+  /* GET home page. */
+  router.get('/', function(req, res, next) {
+    let client = new zerorpc.Client();
+    client.connect("tcp://127.0.0.1:4242");
+  
+    let twit = new twitter();
+    let twitterClient = twit.client;
+    let params = {
+      tweet_mode: 'extended',
+      language: 'en',
+      track: 'javascript'
+    };
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  let client = new zerorpc.Client();
-  client.connect("tcp://34.214.81.157:4242");
-
-  /*client.invoke("hello", "World!", function(error, res, more) {
-    if (error) {
-      console.log("ERROR: " + error);
-    } else {
-      console.log(res);
-    }
-  });*/
-
-  let twit = new twitter();
-  let twitterClient = twit.client;
-
-  let stream = twitterClient.stream('statuses/filter', { track: 'trump' }, (stream) => {
-    stream.on('data', (event) => {
-      client.invoke("hello", event.text, function(error, res, more) {
-        if (error) {
-          console.log("Invoke error: " + error);
-          throw error;
-        } else {
-          console.log("Text: " + event.text);
-          console.log("polarity: " + res);
-        }
+    let allTweets = []
+  
+    twitterClient.stream('statuses/filter', params, (stream) => {
+      stream.on('data', (event) => {
+        allTweets.push(event);
       });
-    });
 
-    stream.on('error', (error) => {
-      console.log("Stream error: " + error);
-      throw error;
-    });
-  }); 
+      setInterval(() => {
+        let nextTweet = allTweets.shift();
 
-  res.render('index', { title: 'CAB432 Assignment 2' });
-});
+        if (nextTweet) {
+          client.invoke("hello", nextTweet.text, function(error, res, more) {
+            if (error) {
+              console.log("Invoke error: " + error);
+              throw error;
+            } else {
+              console.log("Text: " + nextTweet.text);
+              console.log("polarity: " + res);
+              io.sockets.emit('tweet', nextTweet);
+            }
+          });
+        }
+      }, 1000);
+  
+      stream.on('error', (error) => {
+        console.log("Stream error: " + error);
+        throw error;
+      });
+    }); 
+  
+    res.render('index', { title: 'CAB432 Assignment 2' });
+  });
 
-module.exports = router;
+  return router;
+};  
