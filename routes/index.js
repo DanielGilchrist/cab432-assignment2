@@ -67,20 +67,30 @@ module.exports = function(io) {
               
               // add results to database
               for(let i = 0; i < results.length; i++){
-                let text = results[i].text;
-                let size = results[i].text;
-                let item = table.findOne({'text': text});
-                if (item) {
-                  item.size += size;
-                  table.update(item);
-                } else {
-                  table.insert({'text': text, 'size': size});
+                if(results[i]){
+                  let text = results[i].text;
+                  let size = results[i].size;
+                  let item = table.findOne({'text': text});
+                  if (item) {
+                    item.size += size;
+                    table.update(item);
+                    db.saveDatabase();
+                  } else {
+                    table.insert({text: text, size: size});
+                    db.saveDatabase();
+                  }
                 }
               }
 
-              console.log(table.data);
-
-              io.sockets.emit('word-cloud', table.data);
+              
+              let table_data = [].concat(table.data);
+              table_data = table_data.filter(function(obj) { 
+                delete obj['meta']; 
+                delete obj['$loki']; 
+                return obj; 
+              });
+              console.log(table_data);
+              io.sockets.emit('word-cloud', table_data);
             }
           });
         }
