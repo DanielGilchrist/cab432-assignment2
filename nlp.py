@@ -37,6 +37,10 @@ def clean_tweet(data):
         # remove url
         data = remove_url(data)
 
+        # remove username
+        data = re.sub(r'@([A-Za-z0-9_]+)', '', data)
+        data = re.sub(r'^RT$', '', data)
+
         # Fix classic tweet lingo
         data = re.sub(r'\bthats\b', 'that is', data)
         data = re.sub(r'\bive\b', 'i have', data)
