@@ -4,6 +4,9 @@ module.exports = function(io) {
   let twitter = require('./twitter');
   let router = express.Router();
   
+  let db = new LokiConstructor('database.db');
+  let table = db.addCollection('words');
+  
   /* GET home page. */
   router.get('/', function(req, res, next) {
     let client = new zerorpc.Client();
@@ -62,6 +65,17 @@ module.exports = function(io) {
               let results = JSON.parse(res.toString());
               
               // add results to database
+              for(let i = 0; i < results.length; i++){
+                let text = results[i].text;
+                let size = results[i].text;
+                let item = table.findOne({'text': text});
+                if(item){
+                  item.size += size;
+                  table.update(item);
+                }else{
+                  table.insert({'text': text, 'size': size});
+                }
+              }
 
               io.sockets.emit('word-cloud', entities);
             }

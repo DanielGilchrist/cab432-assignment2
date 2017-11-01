@@ -91,15 +91,15 @@ def sentiment(string):
 
 
 # Returns the number of noun_phrases appearance in JSON format
-# { "words" : [
-#               {"text" : phrase, "size": count },
-#               {"text" : phrase, "size": count }
-#             ]
+# { [
+#     {"text" : phrase, "size": count },
+#     {"text" : phrase, "size": count }
+#   ]
 # }
 def get_phrases(string):
     tweet = clean_tweet(string)
     dict_array = []
-    output_dict = {}
+    #output_dict = {}
     if tweet is not None:
         blob = TextBlob(tweet)
         
@@ -109,8 +109,8 @@ def get_phrases(string):
             dictionary['size'] = blob.noun_phrases.count(phrase)
             dict_array.append(dictionary)
             
-        output_dict['words'] = dict_array
-        json_data = json.dumps(output_dict)
+        #output_dict['words'] = dict_array
+        json_data = json.dumps(dict_array)
         return json_data
     else:
         return '[]'
