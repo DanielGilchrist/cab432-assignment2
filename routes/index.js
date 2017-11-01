@@ -1,12 +1,16 @@
 module.exports = function(io) {
   let express = require('express');
   let zerorpc = require('zerorpc');
-  let loki = require('lokijs')
   let twitter = require('./twitter');
   let router = express.Router();
+  let loki = require('lokijs', {
+    autosave: true,
+    autosaveInterval: 500,
+    autoload: true
+})
   
   let db = new loki('database.db');
-  let table = db.addCollection('words');
+  let table = db.addCollection("words");
   
   /* GET home page. */
   router.get('/', function(req, res, next) {
@@ -69,16 +73,20 @@ module.exports = function(io) {
               for(let i = 0; i < results.length; i++){
                 if(results[i]){
                   let text = results[i].text;
-                  let size = results[i].size;
-                  let item = table.findOne({'text': text});
-                  if (item) {
-                    item.size += size;
-                    table.update(item);
-                    db.saveDatabase();
-                  } else {
+                  let size = Number(results[i].size);
+                  // let item = table.find({'text': {'$eq': text}});
+                  // if (item.length > 0) {
+                  //   let new_size = Number(item[0].size) + size;
+                  //   // Remove object
+                  //   // table.remove(item[0]);
+                  //   new_text = text;
+
+                  //   table.insert({text: new_text, size: new_size});
+                  //   db.saveDatabase();
+                  // } else {
                     table.insert({text: text, size: size});
                     db.saveDatabase();
-                  }
+                  // }
                 }
               }
 
