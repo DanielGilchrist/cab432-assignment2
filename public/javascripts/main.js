@@ -5,7 +5,7 @@ socket.on('tweet', function (data) {
     var pictureURL = data.user.profile_image_url;
     var name = data.user.name;
     var handle = data.user.screen_name;
-    var time = data.created_at;
+    var time = new Date(data.created_at).toLocaleString();
     var text = data.text;
     var tweetURL = `https://twitter.com/${handle}/status/${data.id}`;
 
@@ -41,6 +41,7 @@ socket.on('chart', function (positive, neutral, negative) {
     // Callback that creates and populates a data table,
     // instantiates the pie chart, passes in the data and
     // draws it.
+
     function drawChart() {
         // Create the data table.
         var data = new google.visualization.DataTable();
@@ -63,4 +64,13 @@ socket.on('chart', function (positive, neutral, negative) {
         var chart = new google.visualization.PieChart(document.getElementById('chart'));
         chart.draw(data, options);
     }
+});
+
+socket.on('word-cloud', function (entities) {
+    $('#word-cloud').empty();
+    d3.wordcloud()
+    .size([800, 400])
+    .selector('#word-cloud')
+    .words(entities.words)
+    .start();
 });

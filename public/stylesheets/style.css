@@ -58,3 +58,7 @@ body > .container {
 .clear {
     clear: both;
 }
+
+form {
+    margin-bottom: 3%;
+}

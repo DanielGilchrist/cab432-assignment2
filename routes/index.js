@@ -14,13 +14,14 @@ module.exports = function(io) {
     let params = {
       tweet_mode: 'extended',
       language: 'en',
-      track: 'trump'
+      track: 'javascript'
     };
 
-    let allTweets = []
     let positive = 0;
     let neutral = 0;
     let negative = 0;
+    let allTweets = [];
+    let entities = {words: []};
   
     twitterClient.stream('statuses/filter', params, (stream) => {
       stream.on('data', (event) => {
@@ -31,17 +32,18 @@ module.exports = function(io) {
         let nextTweet = allTweets.shift();
 
         if (nextTweet) {
-          client.invoke("hello", nextTweet.text, function(error, res, more) {
+          client.invoke("get_sentiment", nextTweet.text, function(error, res, more) {
             if (error) {
               console.log("Invoke error: " + error);
               throw error;
             } else {
+              let sentiment = JSON.parse(res.toString());
               console.log("Text: " + nextTweet.text);
-              console.log("polarity: " + res);
+              console.log("polarity: " + sentiment.polarity);
 
-              if (res > 0.1) {
+              if (sentiment.polarity > 0.1) {
                 positive++;
-              } else if (res < -0.1) {
+              } else if (sentiment.polarity < -0.1) {
                 negative++;
               } else {
                 neutral++;
@@ -51,16 +53,33 @@ module.exports = function(io) {
               io.sockets.emit('chart', positive, neutral, negative);
             }
           });
+
+          client.invoke("get_entities", nextTweet.text, function(error, res, more) {
+            if (error) {
+              console.log("Invoke error: " + error);
+              throw error;
+            } else {
+              let results = JSON.parse(res.toString());
+              
+              // add results to database
+
+              io.sockets.emit('word-cloud', entities);
+            }
+          });
         }
-      }, 1000);
+      }, 2000);
   
       stream.on('error', (error) => {
         console.log("Stream error: " + error);
-        throw error;
+        res.redirect('/error');
       });
     }); 
   
     res.render('index', { title: 'CAB432 Assignment 2' });
+  });
+
+  router.get('/error', function(req, res, next) {
+    res.render('error', {});
   });
 
   return router;

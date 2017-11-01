@@ -3,7 +3,13 @@ extends layout
 block content
   // Page Content
   main.container(role='main')
-    h1 Welcome!
+    p Enter search terms separated by a space then hit "Start Stream" :^)
+    form(action="/start" )
+      .form-group.row
+          .col-sm-10
+            input.form-control(type='text', placeholder='Enter Search Terms', required='', disabled='')
+          button.btn.btn-primary(type='submit') Start Stream
+
     ul#myTab.nav.nav-tabs(role='tablist')
       li.nav-item
         a#home-tab.nav-link.active(data-toggle='tab', href='#home', role='tab', aria-controls='home', aria-selected='true') Tweets
@@ -14,3 +20,5 @@ block content
         #tweets
       #profile.tab-pane.fade(role='tabpanel', aria-labelledby='profile-tab')
         #chart
+
+        #word-cloud
