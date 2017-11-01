@@ -33,6 +33,11 @@ body > .container {
     margin-right: 10%;
 }
 
+#chart {
+    width: 100%;
+    min-height: 500px;
+}
+
 #tab-content {
     margin-bottom: 10%;
 }

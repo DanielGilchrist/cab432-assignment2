@@ -4,21 +4,30 @@ block content
   // Page Content
   main.container(role='main')
     p Enter search terms separated by a space then hit "Start Stream" :^)
-    form(action="/start" )
-      .form-group.row
-          .col-sm-10
-            input.form-control(type='text', placeholder='Enter Search Terms', required='', disabled='')
-          button.btn.btn-primary(type='submit') Start Stream
-
-    ul#myTab.nav.nav-tabs(role='tablist')
-      li.nav-item
-        a#home-tab.nav-link.active(data-toggle='tab', href='#home', role='tab', aria-controls='home', aria-selected='true') Tweets
-      li.nav-item
-        a#profile-tab.nav-link(data-toggle='tab', href='#profile', role='tab', aria-controls='profile', aria-selected='false') Sentiment Chart
-    #tab-content.tab-content
-      #home.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='home-tab')
-        #tweets
-      #profile.tab-pane.fade(role='tabpanel', aria-labelledby='profile-tab')
-        #chart
-
-        #word-cloud
+    - if (!streaming) {
+      form(action="/start", method="POST")
+        .form-group.row
+            .col-sm-10
+              input.form-control(type='text', placeholder='Enter Search Terms', name='terms' required='')
+            button.btn.btn-primary(type='submit') Start Stream
+    -  } else {
+          form(action="/stop", method="POST")
+            .form-group.row
+                .col-sm-10
+                  input.form-control(type='text', placeholder='Enter Search Terms', name='terms', value=terms disabled='', required='')
+                button.btn.btn-primary(type='submit') Stop Stream
+          
+          ul#myTab.nav.nav-tabs(role='tablist')
+            li.nav-item
+              a#home-tab.nav-link.active(data-toggle='tab', href='#home', role='tab', aria-controls='home', aria-selected='true') Tweets
+            li.nav-item
+              a#profile-tab.nav-link(data-toggle='tab', href='#profile', role='tab', aria-controls='profile', aria-selected='false') Data Visualisation
+          #tab-content.tab-content
+            #home.tab-pane.fade.show.active(role='tabpanel', aria-labelledby='home-tab')
+              #tweets
+            #profile.tab-pane.fade(role='tabpanel', aria-labelledby='profile-tab')
+              .col-md-10
+                #chart
+              h3 Most Common Phrases
+              #word-cloud
+    -  }

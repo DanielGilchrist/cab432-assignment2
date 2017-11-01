@@ -7,7 +7,7 @@ socket.on('tweet', function (data) {
     var handle = data.user.screen_name;
     var time = new Date(data.created_at).toLocaleString();
     var text = data.text;
-    var tweetURL = `https://twitter.com/${handle}/status/${data.id}`;
+    var tweetURL = `https://twitter.com/${handle}/status/${data.id_str}`;
 
     var tweetHTML = `<div class="card">
         <div class="card-body">
@@ -19,7 +19,6 @@ socket.on('tweet', function (data) {
             <br/> ${text}
             <br/>
             <br/>
-            <a href="#">link</a>
             <div class="summary">
                 <a href="${tweetURL}"><i class="fa fa-file-o"></i> View Full Tweet</a>
             </div>
@@ -55,9 +54,8 @@ socket.on('chart', function (positive, neutral, negative) {
 
         // Set chart options
         var options = {
-            'title': 'Live Tweet Sentiment',
-            'width': 400,
-            'height': 300
+            title: 'Live Tweet Sentiment',
+            colors: ['#7bff60', '#60d7ff', '#ff6060']
         };
 
         // Instantiate and draw our chart, passing in some options.
@@ -71,6 +69,6 @@ socket.on('word-cloud', function (entities) {
     d3.wordcloud()
     .size([800, 400])
     .selector('#word-cloud')
-    .words(entities.words)
+    .words(entities)
     .start();
 });
