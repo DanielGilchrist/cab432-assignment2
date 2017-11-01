@@ -1,0 +1,21 @@
+sudo apt install -y python
+sudo apt-get update
+sudo apt install -y python-pip
+
+# install textblob and nltk's corpora
+pip install -U textblob
+python -m textblob.download_corpora
+
+
+# install zerorpc
+pip install zerorpc
+
+
+#! create nlp.py in the current dir
+crontab -e
+# Go to the last line of the editor and type
+@reboot python /home/ubuntu/nlp.py
+@reboot cd /home/ubuntu/cab432-assignment2 && npm start
+
+sudo reboot
+
