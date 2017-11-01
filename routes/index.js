@@ -1,10 +1,11 @@
 module.exports = function(io) {
   let express = require('express');
   let zerorpc = require('zerorpc');
+  let loki = require('lokijs')
   let twitter = require('./twitter');
   let router = express.Router();
   
-  let db = new LokiConstructor('database.db');
+  let db = new loki('database.db');
   let table = db.addCollection('words');
   
   /* GET home page. */
@@ -69,15 +70,17 @@ module.exports = function(io) {
                 let text = results[i].text;
                 let size = results[i].text;
                 let item = table.findOne({'text': text});
-                if(item){
+                if (item) {
                   item.size += size;
                   table.update(item);
-                }else{
+                } else {
                   table.insert({'text': text, 'size': size});
                 }
               }
 
-              io.sockets.emit('word-cloud', entities);
+              console.log(table.data);
+
+              io.sockets.emit('word-cloud', table.data);
             }
           });
         }
