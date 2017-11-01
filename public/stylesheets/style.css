@@ -28,6 +28,15 @@ body > .container {
     padding-left: 15px;
 }
 
+#tweets {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+#tab-content {
+    margin-bottom: 10%;
+}
+
 .card-body img {
     float: left;
     margin-right: 10px;

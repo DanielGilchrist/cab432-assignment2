@@ -14,10 +14,13 @@ module.exports = function(io) {
     let params = {
       tweet_mode: 'extended',
       language: 'en',
-      track: 'javascript'
+      track: 'trump'
     };
 
     let allTweets = []
+    let positive = 0;
+    let neutral = 0;
+    let negative = 0;
   
     twitterClient.stream('statuses/filter', params, (stream) => {
       stream.on('data', (event) => {
@@ -35,7 +38,17 @@ module.exports = function(io) {
             } else {
               console.log("Text: " + nextTweet.text);
               console.log("polarity: " + res);
+
+              if (res > 0.1) {
+                positive++;
+              } else if (res < -0.1) {
+                negative++;
+              } else {
+                neutral++;
+              }
+
               io.sockets.emit('tweet', nextTweet);
+              io.sockets.emit('chart', positive, neutral, negative);
             }
           });
         }
